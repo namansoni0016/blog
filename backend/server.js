@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import Post from "./models/Post.js";
 import mongoose from "mongoose";
+import cors from "cors";
 dotenv.config();
 
 const app = express();
@@ -13,6 +14,13 @@ mongoose.connect(process.env.MONGO_URL)
 
 //Middlewares
 app.use(express.json());
+
+//Cors
+const corsOptions = {
+    origin: ["http://localhost:5173"],
+    credentials: true,
+};
+app.use(cors(corsOptions));
 
 //Create a post
 app.post("/api/v1/posts/create", async(req, res) => {
