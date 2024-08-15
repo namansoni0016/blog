@@ -35,6 +35,19 @@ app.post("/api/v1/posts/create", async(req, res) => {
     } catch (error) {
         res.json(error)
     }
+});
+//List posts
+app.get('/api/v1/posts', async(req, res) => {
+    try {
+        const posts = await Post.find();
+        res.json({
+            status: "Success",
+            message: "Posts fetched successfully!",
+            posts,
+        })
+    } catch (error) {
+        res.json(error);
+    }
 })
 
 //Starting the server

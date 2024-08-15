@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import CreatePost from './components/Posts/CreatePost';
+import PostList from './components/Posts/PostList';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <div>
       <CreatePost/>
+      <PostList/>
     </div>
   )
 }
