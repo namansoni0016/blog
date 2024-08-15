@@ -48,6 +48,41 @@ app.get('/api/v1/posts', async(req, res) => {
     } catch (error) {
         res.json(error);
     }
+});
+//Update posts
+app.put('/api/v1/posts/:postId', async(req ,res ) => {
+    try {
+        //get the post id from params
+        const postId = req.params.postId;
+        const postFound = await Post.findById(postId);
+        if(!postFound) {
+            throw new Error("Post not found!");
+        }
+        const postUpdated = await Post.findByIdAndUpdate(postId, {
+            title: req.body.title,
+            description: req.body.description,
+        }, {new: true});
+        res.json({
+            status: "Post updated successfully!",
+            postUpdated
+        });
+    } catch (error) {
+        throw new Error(error);
+    }
+});
+//Get single post to update
+app.get('/api/v1/posts/:postId', async (req, res) => {
+    try {
+        //get the post id from params
+        const postId = req.params.postId;
+        const postFound = await Post.findById(postId);
+        res.json({
+            status: "Post fetched successfully!",
+            postFound
+        })
+    } catch (error) {
+        throw new Error(error);
+    }
 })
 
 //Starting the server
