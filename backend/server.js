@@ -85,6 +85,21 @@ app.get('/api/v1/posts/:postId', async (req, res) => {
     }
 })
 
+//Delete post
+app.delete('/api/v1/posts/:postId', async (req, res) => {
+    try {
+        //get the post id from params
+        const postId = req.params.postId;
+        await Post.findByIdAndDelete(postId);
+        res.json({
+            status: "success",
+            message: "Post deleted successfully!",
+        })
+    } catch (error) {
+        throw new Error(error);
+    }
+})
+
 //Starting the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
