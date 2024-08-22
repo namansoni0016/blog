@@ -14,6 +14,7 @@ const UpdatePost = () => {
         queryKey: ['fetch-post'],
         queryFn: () => fetchPostAPI(postId)
     });
+    console.log(data);
     const postMutation = useMutation({
         mutationKey: ['update-post'],
         mutationFn: updatePostAPI,
