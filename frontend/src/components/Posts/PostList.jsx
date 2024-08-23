@@ -21,7 +21,8 @@ const PostList = () => {
             //refetch
             refetch();
         }).catch((e) => console.log(e))
-    }
+    };
+    console.log(data);
     return (
     <section className="overflow-hidden">
         <div className="container px-4 mx-auto">
@@ -41,7 +42,7 @@ const PostList = () => {
                                 <div className="relative" style={{ height: 240 }}>
                                     <div className="absolute top-0 left-0 z-10"></div>
                                     <div className="absolute bottom-0 right-0 z-10"></div>
-                                    <img className="absolute inset-0 w-full h-full object-cover rounded-2xl" src='https://cdn.pixabay.com/photo/2023/03/19/05/31/flower-7861942_1280.jpg' alt/>
+                                    <img className="absolute inset-0 w-full h-full object-cover rounded-2xl" src={post?.image?.path} alt={post?.description}/>
                                 </div>
                                 <div className="pt-6 pb-3 px-4">
                                     <div className="rendered-html-content mb-2" dangerouslySetInnerHTML={{__html: post?.description,}}/>
