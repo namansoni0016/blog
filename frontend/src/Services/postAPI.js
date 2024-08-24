@@ -4,10 +4,7 @@ const BASE_URL = "http://localhost:3000/api/v1/posts";
 //Creating a function that must return a promise
 //Create Post API
 export const createPostAPI = async(postData) => {
-    const response = await axios.post(`${BASE_URL}/create`, {
-        title: postData.title,
-        description: postData.description,
-    });
+    const response = await axios.post(`${BASE_URL}/create`, postData);
     return response.data; 
 };
 
