@@ -4,6 +4,8 @@ import { fetchAllPostsAPI } from '../../Services/postAPI';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { deletePostAPI } from '../../Services/postAPI';
+import NoDataFound from '../Alert/NoDataFound';
+import AlertMessage from '../Alert/AlertMessage';
 import "./postsCss.css";
 
 const PostList = () => {
@@ -15,19 +17,20 @@ const PostList = () => {
         mutationKey: ['delete-post'],
         mutationFn: deletePostAPI,
     });
-    //Delete Handler
-    const deleteHandler = async (postId) => {
-        postMutation.mutateAsync(postId).then(() => {
-            //refetch
-            refetch();
-        }).catch((e) => console.log(e))
-    };
-    console.log(data);
+    // //Delete Handler
+    // const deleteHandler = async (postId) => {
+    //     postMutation.mutateAsync(postId).then(() => {
+    //         //refetch
+    //         refetch();
+    //     }).catch((e) => console.log(e))
+    // };
+    if(isLoading) return <AlertMessage type='loading' message='Loading, Please wait!'/>
+    if(isError) return <AlertMessage type='error' message='Something went wrong!'/>
+    if(data?.posts?.length <= 0) return <NoDataFound text='No post found!'/>
     return (
     <section className="overflow-hidden">
         <div className="container px-4 mx-auto">
             <h1 className="text-4xl lg:text-6xl font-bold font-heading mb-6 mt-16">Blog</h1>
-            {/*  */}
             {/* featured post */}
             {/* <FeaturedPost post={featuredPost} /> */}
             <h2 className="text-4xl font-bold font-heading mb-10">Latest articles</h2>
