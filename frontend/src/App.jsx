@@ -5,6 +5,8 @@ import PublicNavbar from "./components/Navbar/PublicNavbar";
 import HomePage from "./components/Home/HomePage";
 import UpdatePost from "./components/Posts/UpdatePost";
 import PostDetails from "./components/Posts/PostDetails";
+import Login from "./components/Users/Login";
+import Register from "./components/Users/Register";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/posts" element={<PostList/>}/>
         {/* <Route path="/posts/:postId" element={<UpdatePost/>}/> */}
         <Route path="/posts/:postId" element={<PostDetails/>}/>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/register" element={<Register/>}/>
       </Routes>
     </BrowserRouter>
   )

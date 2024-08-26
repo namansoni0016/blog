@@ -8,10 +8,10 @@ const upload = multer({ storage}).single('image');
 
 const postRouter = express.Router();
 
-postRouter.post("/posts/create", upload, postsController.createPost);
-postRouter.get('/posts', postsController.listPosts);
-postRouter.put('/posts/:postId', postsController.updatePosts);
-postRouter.get('/posts/:postId', postsController.getSinglePost);
-postRouter.delete('/posts/:postId', postsController.deletePost);
+postRouter.post("/create", upload, postsController.createPost);
+postRouter.get('/', postsController.listPosts);
+postRouter.put('/:postId', postsController.updatePosts);
+postRouter.get('/:postId', postsController.getSinglePost);
+postRouter.delete('/:postId', postsController.deletePost);
 
 export default postRouter;

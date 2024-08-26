@@ -19,12 +19,12 @@ const userSchema = new mongoose.Schema({
     },
     googleId: {
         type: String,
-        required: true,
+        // required: true,
     },
     authMethods: {
         type: String,
         enum: ["google", "local", "facebook", "github"],
-        required: true,
+        // required: true,
         default: "local",
     },
     passwordResetToken: {
