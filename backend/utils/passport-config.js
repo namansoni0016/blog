@@ -40,7 +40,7 @@ const options = {
             return token;
         }
     }]),
-    secretOrKey: process.env.JWT_SECRET
+    secretOrKey: process.env.JWT_SECRET,
 };
 
 //Configuring jwt 
@@ -64,7 +64,7 @@ passport.use(
     new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackurl: 'http://localhost:3000/api/v1/users/auth/google/callback'
+        callbackURL: 'http://localhost:3000/api/v1/users/auth/google/callback'
     }, async(accessToken, refreshtoken, profile, done) => {
         try {
             //check if user found
@@ -81,7 +81,7 @@ passport.use(
             //Check if user not found
             if(!user) {
                 user = await User.create({
-                    username: displayName,
+                    username: name,
                     googleId: id,
                     profilePicture: picture,
                     authMethods: "google",

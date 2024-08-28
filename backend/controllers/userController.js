@@ -49,7 +49,34 @@ const UserController = {
                 _id: user?._id,
             })
         })(req, res, next)
-    })
+    }),
+    //googleAuth : when user clicks sign up or sign in with google and open form to accept consent
+    googleAuth: passport.authenticate('google', {scope: ['profile']}),
+    //GoogleAuthCallback : trigger the google auth
+    googleAuthCallback: asyncHandler(async (req, res, next) => {
+        passport.authenticate('google', {
+            failureRedirect: '/login',
+            session: false,
+        }, (err, user, info) => {
+            if(err) return next(err);
+            if(!user) {
+                returnres.redirect('http://localhost:5173/google-login-error')
+            }
+            //generate token
+            const token = jwt.sign({id: user?._id}, process.env.JWT_SECRET, {
+                expiresIn: "3d"
+            });
+            // set the token in the cookie
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'strict',
+                maxAge: 24 * 60 * 60 * 1000,
+            });
+            // redirect the user to dashboard on client
+            res.redirect('http://localhost:5173/dashboard');
+        })(req, res, next);
+    }),
 }
 
 export default UserController;
