@@ -77,6 +77,29 @@ const UserController = {
             res.redirect('http://localhost:5173/dashboard');
         })(req, res, next);
     }),
+    //Check user authentication status
+    checkAuthenticated: asyncHandler(async(req, res) => {
+        const token = req.cookies['token'];
+        if(!token) {
+            return res.status(401).json({ isAuthticated: false });
+        }
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await User.findById(decoded.id);
+            if(!user) {
+                return res.status(401).json({ isAuthticated: false });
+            } else {
+                return res.status(200).json({
+                    isAuthticated: true,
+                    _id: user?._id,
+                    username: user?.username,
+                    profilePicture: user?.profilePicture,
+                })
+            }
+        } catch (error) {
+            return res.status(401).json({ isAuthticated: false, error });
+        }
+    })
 }
 
 export default UserController;

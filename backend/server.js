@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import passport from "./utils/passport-config.js";
 import postRouter from "./routes/postsRoutes.js";
 import userRouter from "./routes/userRoutes.js";
@@ -16,6 +17,7 @@ mongoose.connect(process.env.MONGO_URL)
 
 //Middlewares
 app.use(express.json());
+app.use(cookieParser());
 
 //Cors
 const corsOptions = {
