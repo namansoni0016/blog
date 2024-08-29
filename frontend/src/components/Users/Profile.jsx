@@ -14,7 +14,6 @@ const Profile = () => {
     useEffect(() => {
         dispatch(isAuthenticated(data));
     }, [data]);
-    console.log(data);
     return (
         <div>Profile</div>
     )
