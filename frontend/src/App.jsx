@@ -15,6 +15,9 @@ import { checkAuthStatusAPI } from "./Services/usersAPI";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { isAuthenticated } from "./redux/slices/authSlices";
+import AuthRoute from "./components/AuthRoute";
+import UserDashboard from "./components/Users/UserDashboard";
+import AccountSummary from "./components/Users/AccountSummary";
 
 function App() {
   const { data } = useQuery({
@@ -27,19 +30,23 @@ function App() {
   }, [data]);
   // Get the login user from store
   const { userAuth } = useSelector((state) => state.auth);
-  console.log(userAuth);
   return (
     <BrowserRouter>
     {userAuth ? <PrivateNavbar/> : <PublicNavbar/>};
       <Routes>
         <Route path="/" element={<HomePage/>}/>
-        <Route path="/create-post" element={<CreatePost/>}/>
+        <Route path="/dashboard" element={<UserDashboard/>}>
+          {/* Create post route */}
+          <Route path="create-post" element={<AuthRoute><CreatePost/></AuthRoute>}/>
+          {/* Account Summary */}
+          <Route path="" element={<AuthRoute><AccountSummary/></AuthRoute>}/>
+        </Route>
         <Route path="/posts" element={<PostList/>}/>
         {/* <Route path="/posts/:postId" element={<UpdatePost/>}/> */}
         <Route path="/posts/:postId" element={<PostDetails/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/register" element={<Register/>}/>
-        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/profile" element={<AuthRoute><Profile/></AuthRoute>}/>
       </Routes>
     </BrowserRouter>
   )

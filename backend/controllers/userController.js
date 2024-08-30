@@ -99,6 +99,10 @@ const UserController = {
         } catch (error) {
             return res.status(401).json({ isAuthticated: false, error });
         }
+    }),
+    logout: asyncHandler( async (req, res) => {
+        res.cookie('token', '', { maxAge: 1 });
+        res.status(200).json({ message: 'Logout Success'});
     })
 }
 
