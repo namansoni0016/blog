@@ -4,7 +4,9 @@ const BASE_URL = "http://localhost:3000/api/v1/posts";
 //Creating a function that must return a promise
 //Create Post API
 export const createPostAPI = async(postData) => {
-    const response = await axios.post(`${BASE_URL}/create`, postData);
+    const response = await axios.post(`${BASE_URL}/create`, postData, {
+        withCredentials: true
+    });
     return response.data; 
 };
 
@@ -25,13 +27,17 @@ export const updatePostAPI = async(postData) => {
     const response = await axios.put(`${BASE_URL}/${postData?.postId}`, {
         title: postData.title,
         description: postData.description,
+    }, {
+        withCredentials: true
     });
     return response.data; 
 };
 
 //Delete a post
 export const deletePostAPI = async(postId) => {
-    const post = await axios.delete(`${BASE_URL}/${postId}`);
+    const post = await axios.delete(`${BASE_URL}/${postId}`, {
+        withCredentials: true
+    });
     return post.data
 }
 

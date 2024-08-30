@@ -15,16 +15,16 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: false,
     },
     googleId: {
         type: String,
-        required: true,
+        // required: true,
     },
     authMethods: {
         type: String,
         enum: ["google", "local", "facebook", "github"],
-        required: true,
+        // required: true,
         default: "local",
     },
     passwordResetToken: {

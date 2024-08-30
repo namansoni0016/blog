@@ -2,7 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+import passport from "./utils/passport-config.js";
 import postRouter from "./routes/postsRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -14,6 +17,7 @@ mongoose.connect(process.env.MONGO_URL)
 
 //Middlewares
 app.use(express.json());
+app.use(cookieParser());
 
 //Cors
 const corsOptions = {
@@ -22,8 +26,12 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+//Passport middleware
+app.use(passport.initialize());
+
 //Routes
-app.use('/api/v1', postRouter);
+app.use('/api/v1/posts', postRouter);
+app.use('/api/v1/users', userRouter);
 
 //Not found handler
 app.use((req, res, next) => {
