@@ -1,11 +1,26 @@
 import asyncHandler from "express-async-handler";
 import Post from "../models/Post.js";
+import Category from "../models/Category.js";
 
 const postsController = {
     //Create a post
     createPost: asyncHandler(async(req, res) => {
-        const { description } = req.body;
-        const postCreated = await Post.create({ description, image: req.file, author: req.user });
+        const { description, category } = req.body;
+        // Find the category
+        const categoryFound = await Category.findById(category);
+        if(!categoryFound) {
+            throw new Error('Category not found!')
+        }
+        const postCreated = await Post.create({ 
+            description, 
+            image: req.file, 
+            author: req.user,
+            category
+        });
+        //push the post into categories
+        categoryFound.posts.push(categoryFound?._id);
+        //resave the category
+        await categoryFound.save();
         res.json({
             status: 'success',
             message: 'Post created successfully!',
@@ -14,7 +29,7 @@ const postsController = {
     }),
     //List posts
     listPosts: asyncHandler(async(req, res) => {
-        const posts = await Post.find();
+        const posts = await Post.find().populate('category');
         res.json({
             status: "Success",
             message: "Posts fetched successfully!",

@@ -4,10 +4,13 @@ import * as Yup from "yup";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import { useState } from 'react';
+import Select from "react-select";
+import { useQuery } from '@tanstack/react-query';
 import { createPostAPI } from '../../Services/postAPI';
 import { useMutation } from '@tanstack/react-query';
 import { FaTimesCircle } from "react-icons/fa";
 import AlertMessage from '../Alert/AlertMessage';
+import { fetchAllCategoriesAPI } from '../../Services/categoryAPI';
 
 const CreatePost = () => {
     const [description, setDescription] = useState('');
@@ -21,18 +24,26 @@ const CreatePost = () => {
     const formik = useFormik({
         initialValues: {
             description: '',
-            image: ''
+            image: '',
+            category: ''
         },
         validationSchema: Yup.object({
             description: Yup.string().required('Description is required!'),
             image: Yup.string().required('Image is required!'),
+            category: Yup.string().required('Category is required!'),
         }),
         onSubmit: (values) => {
             const formData = new FormData();
             formData.append('description', description);
             formData.append('image', values.image);
+            formData.append('category', values.category);
             postMutation.mutate(formData);
         }
+    });
+    //Fetching categories
+    const {data: categoriesData} = useQuery({
+        queryKey: ['category-lists'],
+        queryFn: fetchAllCategoriesAPI
     });
     //File uploading
     const handleFileChange = (event) => {
@@ -70,15 +81,25 @@ const CreatePost = () => {
                     <ReactQuill value={formik.values.description} onChange={(value) => {
                         setDescription(value);
                         formik.setFieldValue("description", value);
-                    }} className='h-40'/>
+                    }} className='h-40 mb-2'/>
                     {/* display error message */}
                     {formik.touched.description && formik.errors.description && (<span>{formik.errors.description}</span>)}
                 </div>
                 {/* Category Input - Dropdown for selecting post category */}
-                <div className='mb-10'>
-                    <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
+                <div className='mb-8'>
+                    <label htmlFor="category" className="block text-sm font-medium text-gray-700 mt-2">Category</label>
+                    <Select name='category' options={categoriesData?.categories?.map((category) => {
+                        return {
+                            value: category._id,
+                            label: category.categoryName
+                        }
+                    })} onChange={(option) => {
+                        return formik.setFieldValue('category', option.value);
+                    }}
+                    value={categoriesData?.categories?.find((option) => {option.value === formik.values.category})}
+                    className='mt-1 block w-full'/>
                     {/* display error */}
-                    {/* {formik.touched.category && formik.errors.category && (<p className="text-sm text-red-600">{formik.errors.category}</p>)} */}
+                    {formik.touched.category && formik.errors.category && (<p className="text-sm text-red-600">{formik.errors.category}</p>)}
                 </div>
                 {/* Image Upload Input - File input for uploading images */}
                 <div className="flex flex-col items-center justify-center bg-gray-50 p-4 shadow rounded-lg">

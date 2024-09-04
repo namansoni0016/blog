@@ -7,6 +7,8 @@ import { deletePostAPI } from '../../Services/postAPI';
 import NoDataFound from '../Alert/NoDataFound';
 import AlertMessage from '../Alert/AlertMessage';
 import "./postsCss.css";
+import PostCategory from '../Category/PostCategory';
+import { fetchAllCategoriesAPI } from '../../Services/categoryAPI';
 
 const PostList = () => {
     const {isError, isLoading, data, error, isSuccess, refetch} = useQuery({
@@ -16,6 +18,11 @@ const PostList = () => {
     const postMutation = useMutation({
         mutationKey: ['delete-post'],
         mutationFn: deletePostAPI,
+    });
+    //Fetching categories
+    const {data: categoriesData} = useQuery({
+      queryKey: ['category-lists'],
+      queryFn: fetchAllCategoriesAPI
     });
     // //Delete Handler
     // const deleteHandler = async (postId) => {
@@ -35,7 +42,7 @@ const PostList = () => {
             {/* <FeaturedPost post={featuredPost} /> */}
             <h2 className="text-4xl font-bold font-heading mb-10">Latest articles</h2>
             {/* Post category */}
-            {/* <PostCategory categories={categories} onCategorySelect={handleCategoryFilter} onClearFilters={clearFilters}/> */}
+            <PostCategory categories={categoriesData} /*onCategorySelect={handleCategoryFilter} onClearFilters={clearFilters} *//>
             <div className="flex flex-wrap mb-32 -mx-4">
                 {/* Posts */}
                 {data?.posts?.map((post) => (
@@ -55,7 +62,7 @@ const PostList = () => {
                                             <circle cx={2} cy={2} r={2} fill="#B8B8B8" />
                                         </svg>
                                         <div className="py-1 px-2 rounded-md border border-gray-100 text-xs font-medium text-gray-700 inline-block">
-                                            {/* {post?.category?.categoryName} */}
+                                            {post?.category?.categoryName}
                                         </div>
                                     </div>
                                 </div>
