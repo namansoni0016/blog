@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAllPostsAPI } from '../../Services/postAPI';
 import { Link } from 'react-router-dom';
@@ -9,12 +10,47 @@ import AlertMessage from '../Alert/AlertMessage';
 import "./postsCss.css";
 import PostCategory from '../Category/PostCategory';
 import { fetchAllCategoriesAPI } from '../../Services/categoryAPI';
+import { FaSearch } from "react-icons/fa";
+import { MdClear } from "react-icons/md";
 
 const PostList = () => {
-    const {isError, isLoading, data, error, isSuccess, refetch} = useQuery({
-        queryKey: ['lists-posts'],
-        queryFn: fetchAllPostsAPI
-    });
+  //filtering state
+  const [filters, setFilters] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
+  const {isError, isLoading, data, error, isSuccess, refetch} = useQuery({
+    queryKey: ['lists-posts', {...filters, page}],
+    queryFn: () => fetchAllPostsAPI({...filters, title: searchTerm, page, limit: 10})
+  });
+  //category filter handler
+  const handleCategoryFilter = (categoryId) => {
+    setFilters({...filters, category: categoryId})
+    setPage(1)
+    refetch();
+  }
+  //search handler 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value)
+  }
+  // search term handler 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setFilters({...filters, title: searchTerm})
+    setPage(1);
+    refetch();
+  }
+  //page change handler
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    refetch();
+  }
+  // change filter handler
+  const clearFilters = () => {
+    setFilters({});
+    setSearchTerm('');
+    setPage(1);
+    refetch();
+  }
     const postMutation = useMutation({
         mutationKey: ['delete-post'],
         mutationFn: deletePostAPI,
@@ -31,9 +67,6 @@ const PostList = () => {
     //         refetch();
     //     }).catch((e) => console.log(e))
     // };
-    if(isLoading) return <AlertMessage type='loading' message='Loading, Please wait!'/>
-    if(isError) return <AlertMessage type='error' message='Something went wrong!'/>
-    if(data?.posts?.length <= 0) return <NoDataFound text='No post found!'/>
     return (
     <section className="overflow-hidden">
         <div className="container px-4 mx-auto">
@@ -41,8 +74,24 @@ const PostList = () => {
             {/* featured post */}
             {/* <FeaturedPost post={featuredPost} /> */}
             <h2 className="text-4xl font-bold font-heading mb-10">Latest articles</h2>
+            {/* Searching feature */}
+            <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row items-center gap-2 mb-4">
+              <div className="flex-grow flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                <input type="text" placeholder="Search posts..." value={searchTerm} onChange={handleSearchChange} className="flex-grow p-2 text-sm focus:outline-none"/>
+                <button type="submit" className="p-2 text-white bg-orange-500 hover:bg-blue-600 rounded-r-lg">
+                  <FaSearch className="h-5 w-5" />
+                </button>
+              </div>
+              <button onClick={clearFilters} className="p-2 text-sm text-orange-500 border border-blue-500 rounded-lg hover:bg-blue-100 flex items-center gap-1" >
+                <MdClear className="h-4 w-4" />Clear Filters
+              </button>
+            </form>
+            {/* Show alert */}
+            {data?.posts?.length <= 0 && <NoDataFound text='No post found!'/>}
+            {isError && <AlertMessage type='error' message='Something went wrong!'/>}
+            {isLoading && <AlertMessage type='loading' message='Loading, Please wait!'/>}
             {/* Post category */}
-            <PostCategory categories={categoriesData} /*onCategorySelect={handleCategoryFilter} onClearFilters={clearFilters} *//>
+            <PostCategory categories={categoriesData} onCategorySelect={handleCategoryFilter} onClearFilters={clearFilters}/>
             <div className="flex flex-wrap mb-32 -mx-4">
                 {/* Posts */}
                 {data?.posts?.map((post) => (
@@ -72,32 +121,20 @@ const PostList = () => {
                 ))}
             </div>
         </div>
-
-      {/* Pagination
-      <div className="flex justify-center items-center my-8 space-x-4">
-        {page > 1 && (
-          <button
-            onClick={() => handlePageChange(page - 1)}
-            className="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
-          >
+        {/* Pagination */}
+        <div className="flex justify-center items-center my-8 space-x-4">
+          {page > 1 && (<button onClick={() => handlePageChange(page - 1)} className="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
             Previous
-          </button>
-        )}
-
-        <span className="text-sm font-semibold">
-          Page {page} of {data?.totalPages}
-        </span>
-
-        {page < data?.totalPages && (
-          <button
-            onClick={() => handlePageChange(page + 1)}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
-          >
+          </button>)}
+          <span className="text-sm font-semibold">
+            Page {page} of {data?.totalPages}
+          </span>
+          {page < data?.totalPages && (<button onClick={() => handlePageChange(page + 1)} className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
             Next
-          </button>
-        )}
-      </div> */}
+          </button>)}
+        </div>
     </section>
 )}
 
 export default PostList
+
