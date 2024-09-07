@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import passport from "./utils/passport-config.js";
 import postRouter from "./routes/postsRoutes.js";
 import userRouter from "./routes/userRoutes.js";
+import categoryRouter from "./routes/categoryRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -32,6 +33,7 @@ app.use(passport.initialize());
 //Routes
 app.use('/api/v1/posts', postRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/categories', categoryRouter);
 
 //Not found handler
 app.use((req, res, next) => {

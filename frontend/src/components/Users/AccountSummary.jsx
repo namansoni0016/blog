@@ -8,15 +8,21 @@ import {
     FaFlag,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { userProfileAPI } from "../../Services/usersAPI";
 
-const AccountSummary = ({}) => {
-    //dummy data
-    const hasEmail = false;
-    const hasPlan = false;
-    const isEmailVerified = false;
-    const totalFollowers = 0;
-    const totalFollowing = 10;
-    const userPosts = 0;
+const AccountSummary = () => {
+    const { data, isLoading, isError, error } = useQuery({ 
+        queryKey: ['profile'],
+        queryFn: userProfileAPI
+    });
+    console.log(data);
+    const hasEmail = data?.user?.email;
+    const hasPlan = data?.user?.hasSelectedPlan;
+    const isEmailVerified = data?.user?.isEmailVerified;
+    const totalFollowers = data?.user?.followers?.length;
+    const totalFollowing = data?.user?.following?.length;
+    const userPosts = data?.user?.posts?.length;
     const totalViews = 0;
     const totalLikes = 0;
     //total posts
@@ -75,7 +81,7 @@ const AccountSummary = ({}) => {
     ];
     return (
         <div className="p-4">
-            <p className="font-bold text-2xl text-gray-800 mb-4">Welcome Back:Masynctech</p>
+            <p className="font-bold text-2xl text-gray-800 mb-4">Welcome Back: {data?.user?.username}</p>
             {/* display account verification status */}
             {/* {mutation.isPending ? (<AlertMessage type="loading" message="Loading..." />) : mutation.isError ? (<AlertMessagetype="error" message={mutation?.error?.message || mutation?.error?.response?.data?.message}/>
                 ) : mutation.isSuccess ? (<AlertMessage type="success" message={mutation?.data?.message} />) : null} */}

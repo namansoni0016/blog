@@ -18,6 +18,7 @@ import { isAuthenticated } from "./redux/slices/authSlices";
 import AuthRoute from "./components/AuthRoute";
 import UserDashboard from "./components/Users/UserDashboard";
 import AccountSummary from "./components/Users/AccountSummary";
+import AddCategory from "./components/Category/AddCategory";
 
 function App() {
   const { data } = useQuery({
@@ -38,6 +39,8 @@ function App() {
         <Route path="/dashboard" element={<UserDashboard/>}>
           {/* Create post route */}
           <Route path="create-post" element={<AuthRoute><CreatePost/></AuthRoute>}/>
+          {/* Create category route */}
+          <Route path="add-category" element={<AuthRoute><AddCategory/></AuthRoute>}/>
           {/* Account Summary */}
           <Route path="" element={<AuthRoute><AccountSummary/></AuthRoute>}/>
         </Route>
