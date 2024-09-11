@@ -4,7 +4,7 @@ import Plan from "../models/Plan.js";
 const planController = {
     //create plan
     createPlan: asyncHandler(async (req, res) => {
-        const { planName, features, price, limitation } = req.body;
+        const { planName, features, price } = req.body;
         //check if plan exists
         const planFound = await Plan.findOne({ planName });
         if(planFound) {
@@ -20,7 +20,6 @@ const planController = {
             planName,
             features,
             price,
-            limitation,
             user: req.user,
         });
         res.json({
@@ -72,7 +71,6 @@ const planController = {
                 planName: req.body.planName, 
                 features: req.body.features,
                 price: req.body.price,
-                limitation: req.body.limitation,
             },
             { new: true }
         );
