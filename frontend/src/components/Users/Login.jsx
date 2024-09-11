@@ -23,7 +23,7 @@ const Login = () => {
             username: Yup.string().required('Username is required!'),
             password: Yup.string().required('Password is required!'),
         }),
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             userMutation.mutateAsync(values).then(() => {
                 //redirect
                 navigate('/profile');

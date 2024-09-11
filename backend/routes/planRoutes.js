@@ -6,8 +6,8 @@ const planRouter = express.Router();
 
 planRouter.post("/create", isAuthenticated, planController.createPlan);
 planRouter.get("/", planController.fetchAllPlans);
-planRouter.put("/:categoryId", isAuthenticated, planController.update);
-planRouter.get("/:categoryId", planController.getPlan);
-planRouter.delete("/:categoryId", isAuthenticated, planController.delete);
+planRouter.put("/:planId", isAuthenticated, planController.update);
+planRouter.get("/:planId", planController.getPlan);
+planRouter.delete("/:planId", isAuthenticated, planController.delete);
 
 export default planRouter;

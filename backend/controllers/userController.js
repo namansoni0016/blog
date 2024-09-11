@@ -81,23 +81,23 @@ const UserController = {
     checkAuthenticated: asyncHandler(async(req, res) => {
         const token = req.cookies['token'];
         if(!token) {
-            return res.status(401).json({ isAuthticated: false });
+            return res.status(401).json({ isAuthenticated: false });
         }
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const user = await User.findById(decoded.id);
             if(!user) {
-                return res.status(401).json({ isAuthticated: false });
+                return res.status(401).json({ isAuthenticated: false });
             } else {
                 return res.status(200).json({
-                    isAuthticated: true,
+                    isAuthenticated: true,
                     _id: user?._id,
                     username: user?.username,
                     profilePicture: user?.profilePicture,
                 })
             }
         } catch (error) {
-            return res.status(401).json({ isAuthticated: false, error });
+            return res.status(401).json({ isAuthenticated: false, error });
         }
     }),
     logout: asyncHandler( async (req, res) => {
